@@ -26,25 +26,13 @@ class NumbersTable extends React.Component {
         this.setState({ randomNumbers: copy/*, currentNumber: { id: id, num: randomNum }*/ });
     }
 
-    onSelectClick = e => {
-        //console.log('selected');
-        const id = e.target.id;
-        const num = this.getNumberById(id);
-        num.selected = !num.selected;
-        const index = this.state.randomNumbers.findIndex((n) => n.id === id);
-        const updatedNumbers = update(this.state.randomNumbers, { $splice: [[index, 1, num]] });  // array.splice(start, deleteCount, item1)
-        this.setState({ randomNumbers: updatedNumbers });
-
-        const selectedNumbers = this.state.randomNumbers.filter(n => n.selected === true);
-        this.setState({ selectedNumbers: selectedNumbers });
-
-        //const { selectedNumbers } = this.state;
-        //if (selectedNumbers.includes(num.id)) {
-        //    this.setState({ selectedNumbers: selectedNumbers.filter(i => i !== num.id) });
-        //}
-        //else {
-        //    this.setState({ selectedNumbers: [...selectedNumbers, num.id] });
-        //}
+    onSelectClick = n => {
+        const isSelected = this.state.selectedNumbers.some(num => n.id === num.id);
+        if (isSelected) {
+            this.setState({ selectedNumbers: this.state.selectedNumbers.filter(num => num.id !== n.id) });
+        } else {
+            this.setState({ selectedNumbers: [...this.state.selectedNumbers, n] });
+        }
     }
 
     getNumberById = (id) => {
@@ -52,13 +40,13 @@ class NumbersTable extends React.Component {
     }
     
     onLockClick = (n) => {
-        console.log('lock');
+        console.log(n)
         const { lockedNumbers } = this.state;
-        if (lockedNumbers.includes(n.id)) {
-            this.setState({ lockedNumbers: lockedNumbers.filter(i => i !== n.id) });
+        if (lockedNumbers.includes(n)) {
+            this.setState({ lockedNumbers: lockedNumbers.filter(i => i !== n) });
         }
         else {
-            this.setState({ lockedNumbers: [...lockedNumbers, n.id] });
+            this.setState({ lockedNumbers: [...lockedNumbers, n] });
         }
     }
         render() {
@@ -80,21 +68,19 @@ class NumbersTable extends React.Component {
                             <tbody>
                                 {this.state.randomNumbers.map(n => <TableRow
                                     key={n.id}
-                                    num={n}
-                                    onSelectClick={this.onSelectClick}
-                                    lockedNumbers={this.state.lockedNumbers}
-                                    selectedNumbers={this.state.selectedNumbers}
+                                    num={n.num}
+                                    onSelectClick={() => this.onSelectClick(n)}
+                                    selected={this.state.selectedNumbers.some(num => n.id === num.id)}
                                     isLocked={this.state.lockedNumbers.includes(n.id)}
                                 />)}
                             </tbody>
                         </table>
                     </div>
-                    {this.state.randomNumbers.map(n => <SelectedTable
+                     <SelectedTable
                         selectedNumbers={this.state.selectedNumbers}
                         lockedNumbers={this.state.lockedNumbers}
-                        num={n}
-                        onLockClick={() => this.onLockClick(n)}
-                    />)}
+                        onLockClick={this.onLockClick}
+                    />
 
                 </div>
             );
