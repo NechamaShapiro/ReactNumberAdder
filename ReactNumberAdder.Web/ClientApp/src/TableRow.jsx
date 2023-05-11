@@ -2,23 +2,15 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class TableRow extends React.Component {
+    
     generateRow = () => {
-        if (!this.props.num.selected) {
             return <tr>
                 <td>{this.props.num.num}</td>
                 <td>
-                    <button className='btn btn-primary' id={this.props.num.id} value={this.props.num.num} onClick={this.props.onSelectClick}>Add to Selected</button>
+                    <button className={`${!this.props.num.selected ? 'btn btn-primary' : 'btn btn-danger'}`} disabled={this.props.isLocked} id={this.props.num.id} value={this.props.num.num} onClick={this.props.onSelectClick}>{`${!this.props.num.selected ? 'Add to Selected' : 'Remove from Selelcted'}`}</button>
                 </td>
             </tr>
-        }
-        return <tr>
-            <td>{this.props.num.num}</td>
-            <td>
-                <button className='btn btn-danger' id={this.props.num.id} value={this.props.num.num} onClick={this.props.onSelectClick}>Remove from Selected</button>
-            </td>
-        </tr>
-            
-
+        
     }
     render() {
         return (

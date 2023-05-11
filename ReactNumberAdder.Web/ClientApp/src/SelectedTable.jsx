@@ -2,8 +2,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class SelectedRow extends React.Component {
+    onLockClick = () => {
+        this.props.onLockClick(this.props.num);
+    }
+
     generateTable = () => {
-        const { selectedNumbers } = this.props;
+        const { selectedNumbers, lockedNumbers } = this.props;
         if (!selectedNumbers.length) {
             return //return nothing if none selected
         }
@@ -14,13 +18,13 @@ class SelectedRow extends React.Component {
                     {selectedNumbers.map((n, i) =>
                         <li className="list-group-item" key={i} id={n.id}>
                             {n.num}
-                            <button className="ms-5 btn btn-primary" onClick={this.props.onLockClick }>Lock</button>
+                            <button className="ms-5 btn btn-primary" onClick={this.onLockClick}>{`${!lockedNumbers.includes(n.id) ? 'Lock' : 'Unlock'}`}</button>
                         </li>)}
                 </ul>
             </div>
         </div>
     }
-
+    
     render() {
         return (
             this.generateTable()
